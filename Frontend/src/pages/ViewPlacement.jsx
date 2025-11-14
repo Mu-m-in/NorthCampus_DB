@@ -9,12 +9,14 @@ const ViewPlacement = () => {
   useEffect(() => {
     const fetchPlacements = async () => {
       try {
-        const res = await axios.get("http://127.0.0.1:5000/api/placements");
+        const res = await axios.get("http://127.0.0.1:5000/api/placements/");
         setPlacements(res.data);
-        console.log(res.data);
       } catch (err) {
         console.error("Error fetching placements:", err);
-        alert("Failed to load placements");
+        if(err.response && err.response.data && err.response.data.error) {
+          console.error(err.response.data.error);
+          alert(`⚠️ ${err.response.data.error}`);
+        }
       }
     };
     fetchPlacements();
@@ -57,7 +59,7 @@ const ViewPlacement = () => {
             {filteredPlacements.length > 0 ? (
               filteredPlacements.map((p) => (
                 <tr key={p.id} className="border-b hover:bg-gray-100 transition">
-                  <td className="p-2 text-center">{p.course_name || "Unknown"}</td>
+                  <td className="p-2 text-center">{p.name || "Unknown"}</td>
                   <td className="p-2 text-center">{p.total_students}</td>
                   <td className="p-2 text-center">{p.total_placed}</td>
                   <td className="p-2 text-center">{p.median_salary}</td>

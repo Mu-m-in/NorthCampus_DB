@@ -34,35 +34,17 @@ def list_hostels():
 def add_hostel():
     if not request.is_json:
         return jsonify({'error': 'Request body must be JSON'}), 400
-    data = request.get_json(silent=True) or {}
-
+    data = request.get_json()
+    print(data)
     required = ['name', 'type', 'capacity', 'students_residing']
     missing = [f for f in required if f not in data]
     if missing:
         return jsonify({'error': f'Missing fields: {", ".join(missing)}'}), 400
 
     # Basic validation
-    try:
-        typ = str(data['type']).upper()
-        if typ not in {'BOYS', 'GIRLS', 'MIXED', 'OTHER'}:
-            return jsonify({'error': "type must be one of: BOYS, GIRLS, MIXED, OTHER"}), 400
-
-        capacity = int(data['capacity'])
-        students_residing = int(data['students_residing'])
-        if capacity < 0 or students_residing < 0:
-            return jsonify({'error': 'capacity and students_residing must be >= 0'}), 400
-
-        number_of_rooms = None
-        if 'number_of_rooms' in data and data['number_of_rooms'] is not None:
-            number_of_rooms = int(data['number_of_rooms'])
-            if number_of_rooms < 0:
-                return jsonify({'error': 'number_of_rooms must be >= 0'}), 400
-    except (ValueError, TypeError):
-        return jsonify({'error': 'Numeric fields must be integers'}), 400
-
-    if students_residing > capacity:
-        return jsonify({'error': 'students_residing cannot exceed capacity'}), 400
-
+    typ = str(data['type']).upper()
+    if typ not in {'BOYS', 'GIRLS', 'MIXED', 'OTHER'}:
+        return jsonify({'error': "type must be one of: BOYS, GIRLS, MIXED, OTHER"}), 400
     db = get_db()
     cursor = db.cursor()
     try:
@@ -73,8 +55,8 @@ def add_hostel():
         """, (
             data['name'],
             typ,
-            capacity,
-            students_residing,
+            data['capacity'],
+            data['students_residing']
         ))
         db.commit()
         new_id = cursor.lastrowid

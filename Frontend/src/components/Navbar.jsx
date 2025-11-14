@@ -17,8 +17,8 @@ export default function Navbar() {
     { name: "Examination", path: "/examination" },
     { name: "Placement", path: "/placement", dropdown:true , dropdownItems: [{name: "Add Placement Data", path:"/placement/add"},{ name: "View Placement Data" , path :"/placement/view"}] },
     { name: "Staff", path: "/staff", dropdown: true, dropdownItems: [{ name: "Add Staff Member", path: "/staff/add" }, { name: "View Staff Details", path: "/staff/view"}] },
-    { name: "Scholarship", path: "/scholarship" },
-    { name: "Hostel", path: "/hostel" },
+    { name: "Scholarship", dropdown: true, dropdownItems: [{ name: "Add Scholarship Data", path: "/scholarship/add" }, { name: "View Scholarship Stats", path: "/scholarship/view"}] },
+    { name: "Hostel", dropdown: true, dropdownItems: [{ name: "Add Hostel Data", path: "/hostel/add" }, { name: "View Hostel Stats", path: "/hostel/view"}] },
     { name: "Library", path: "/library" },
   ];
 

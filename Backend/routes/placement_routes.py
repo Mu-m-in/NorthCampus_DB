@@ -17,9 +17,8 @@ def get_placement():
     db = get_db()
     cursor = db.cursor(dictionary=True)
     try:
-        cursor.execute("SELECT * FROM placements")
+        cursor.execute("SELECT * FROM placements Join courses on placements.course_id = courses.id")
         data = cursor.fetchall()
-        print(data)
         if not data:
             return jsonify({'error': 'No data found'}), 404
     except mysql.connector.Error as err:
@@ -32,7 +31,6 @@ def get_placement():
 @placement_bp.route('/', methods=['POST'])
 def add_placement():
     data = request.get_json()
-    print(data)
     # Validate required fields
     required_fields = ["course_id","total_students","total_placed","median_salary","average_salary","male","female","other","year"]
     missing = [field for field in required_fields if field not in data]
