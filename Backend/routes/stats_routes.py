@@ -24,14 +24,24 @@ def get_stats():
     cursor.execute("SELECT COUNT(*) AS count FROM students")
     students = cursor.fetchone()['count']
 
-    cursor.execute("SELECT COUNT(*) AS count FROM courses")
-    exams = cursor.fetchone()['count']  # example placeholder
+    cursor.execute("SELECT SUM(total_students_passed) AS count FROM exam_results")
+    exams = cursor.fetchone()['count']
 
-    cursor.execute("SELECT COUNT(*) AS count FROM placements")
+
+    cursor.execute("SELECT SUM(total_placed) AS count FROM placements")
     placements = cursor.fetchone()['count']
 
-    cursor.execute("SELECT COUNT(*) AS count FROM teaching_staff")
+    cursor.execute("""
+        SELECT SUM(total_male + total_female + total_trans) AS count 
+        FROM scholarships
+    """)
+    scholarships = cursor.fetchone()['count']
+
+    cursor.execute("SELECT COUNT(*) AS count FROM employees")
     staff = cursor.fetchone()['count']
+
+    cursor.execute("SELECT COUNT(*) AS count FROM hostels")
+    hostels = cursor.fetchone()['count']
 
     db.close()
 
@@ -41,7 +51,6 @@ def get_stats():
         "exams": exams,
         "placements": placements,
         "staff": staff,
-        "scholarships": 45,
-        "hostels": 4,
-        "library_books": 5000
+        "scholarships": scholarships,
+        "hostels": hostels,
     })

@@ -13,13 +13,13 @@ const ViewScholarships = () => {
         setScholarships(res.data);
         setLoading(false);
       })
-      .catch((err) => {
+      .catch(() => {
         setError("Failed to fetch scholarship data");
         setLoading(false);
       });
   }, []);
 
-  // Group data by Year and Scheme Name
+  // Group by year + scheme
   const grouped = scholarships.reduce((acc, item) => {
     const key = `${item.year}-${item.scheme_name}`;
     if (!acc[key]) acc[key] = [];
@@ -27,58 +27,92 @@ const ViewScholarships = () => {
     return acc;
   }, {});
 
-  if (loading) return <p className="text-center mt-5">Loading data...</p>;
-  if (error) return <p className="text-center text-red-500 mt-5">{error}</p>;
+  if (loading)
+    return <p className="text-center mt-10 text-lg font-medium">Loading...</p>;
+
+  if (error)
+    return (
+      <p className="text-center text-red-600 mt-10 text-lg font-semibold">
+        {error}
+      </p>
+    );
+
   if (!scholarships.length)
-    return <p className="text-center mt-5">No scholarship data found.</p>;
+    return (
+      <p className="text-center mt-10 text-gray-600 text-lg">
+        No scholarship data found.
+      </p>
+    );
 
   return (
-    <div className="p-6">
-      <h1 className="text-3xl font-semibold mb-6 text-center text-gray-800">
+    <div className="p-6 max-w-6xl mx-auto">
+      <h1 className="text-3xl font-bold text-blue-700 mb-8 text-center">
         Scholarship Records
       </h1>
 
       {Object.entries(grouped).map(([key, rows]) => {
         const [year, schemeName] = key.split("-");
+
         return (
           <div
             key={key}
-            className="bg-white shadow-md rounded-2xl p-5 mb-10 border border-gray-200"
+            className="bg-white shadow-lg rounded-2xl p-6 mb-10 border border-gray-100"
           >
-            <h2 className="text-xl font-semibold mb-2 text-gray-700">
-              Scheme: <span className="text-blue-600">{schemeName}</span>
-            </h2>
-            <p className="text-gray-600 mb-4">Academic Year: {year}</p>
+            {/* CARD HEADER */}
+            <div className="mb-5">
+              <h2 className="text-2xl font-semibold text-gray-800 mb-1">
+                {schemeName}
+              </h2>
+              <p className="text-gray-600">Academic Year: {year}</p>
+            </div>
 
-            <div className="overflow-x-auto">
-              <table className="min-w-full border-collapse border border-gray-300">
-                <thead className="bg-gray-100">
+            {/* TABLE */}
+            <div className="overflow-x-auto rounded-lg border border-gray-200">
+              <table className="min-w-full border-collapse text-sm">
+                <thead className="bg-gray-100 text-gray-700 text-xs uppercase">
                   <tr>
-                    <th className="border border-gray-300 px-3 py-2 text-left">Category</th>
-                    <th colSpan="3" className="border border-gray-300 px-3 py-2 text-center">General</th>
-                    <th colSpan="3" className="border border-gray-300 px-3 py-2 text-center">EWS</th>
-                    <th colSpan="3" className="border border-gray-300 px-3 py-2 text-center">SC</th>
-                    <th colSpan="3" className="border border-gray-300 px-3 py-2 text-center">ST</th>
-                    <th colSpan="3" className="border border-gray-300 px-3 py-2 text-center">OBC</th>
-                    <th colSpan="3" className="border border-gray-300 px-3 py-2 text-center bg-gray-50">Total</th>
+                    <th className="border px-3 py-3 text-left">Category</th>
+
+                    {["General", "EWS", "SC", "ST", "OBC", "Total"].map(
+                      (c, index) => (
+                        <th
+                          key={index}
+                          colSpan="3"
+                          className={`border px-3 py-2 text-center ${
+                            c === "Total" ? "bg-blue-50 font-semibold" : ""
+                          }`}
+                        >
+                          {c}
+                        </th>
+                      )
+                    )}
                   </tr>
-                  <tr className="bg-gray-50 text-xs text-gray-600">
-                    <th className="border border-gray-300 px-2 py-1"></th>
-                    <th>M</th><th>F</th><th>O</th>
-                    <th>M</th><th>F</th><th>O</th>
-                    <th>M</th><th>F</th><th>O</th>
-                    <th>M</th><th>F</th><th>O</th>
-                    <th>M</th><th>F</th><th>O</th>
-                    <th>M</th><th>F</th><th>O</th>
+
+                  {/* SUB HEADERS */}
+                  <tr className="bg-gray-50 text-gray-600 text-xs">
+                    <th className="border px-2 py-1"></th>
+                    {Array(6)
+                      .fill()
+                      .map((_, i) => (
+                        <>
+                          <th className="border px-2 py-1">M</th>
+                          <th className="border px-2 py-1">F</th>
+                          <th className="border px-2 py-1">O</th>
+                        </>
+                      ))}
                   </tr>
                 </thead>
 
                 <tbody>
                   {rows.map((row) => (
-                    <tr key={row.id} className="text-center hover:bg-gray-50">
-                      <td className="border border-gray-300 px-3 py-2 font-medium text-left">
+                    <tr
+                      key={row.id}
+                      className="hover:bg-gray-50 transition text-center"
+                    >
+                      <td className="border px-3 py-2 text-left font-medium">
                         {row.category}
                       </td>
+
                       <td>{row.general_male}</td>
                       <td>{row.general_female}</td>
                       <td>{row.general_trans}</td>
@@ -99,9 +133,15 @@ const ViewScholarships = () => {
                       <td>{row.obc_female}</td>
                       <td>{row.obc_trans}</td>
 
-                      <td className="bg-gray-50 font-semibold">{row.total_male}</td>
-                      <td className="bg-gray-50 font-semibold">{row.total_female}</td>
-                      <td className="bg-gray-50 font-semibold">{row.total_trans}</td>
+                      <td className="bg-blue-50 font-semibold">
+                        {row.total_male}
+                      </td>
+                      <td className="bg-blue-50 font-semibold">
+                        {row.total_female}
+                      </td>
+                      <td className="bg-blue-50 font-semibold">
+                        {row.total_trans}
+                      </td>
                     </tr>
                   ))}
                 </tbody>

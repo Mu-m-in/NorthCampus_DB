@@ -70,30 +70,57 @@ def final_year_report():
     cursor = db.cursor(dictionary=True)
 
     try:
-        query = """
-            SELECT 
-                id,
-                course_id,
-                total_students_appeared,
-                total_students_passed,
-                general,
-                sc,
-                st,
-                obc,
-                ews,
-                male,
-                female,
-                other,
-                year    
-            FROM exam_results
-            WHERE year = %s
-            ORDER BY id DESC
-        """
+        if not year:
+            query = """
+                SELECT 
+                    er.id,
+                    er.course_id,
+                    c.name,
+                    er.total_students_appeared,
+                    er.total_students_passed,
+                    er.general,
+                    er.sc,
+                    er.st,
+                    er.obc,
+                    er.ews,
+                    er.male,
+                    er.female,
+                    er.other,
+                    er.year
+                FROM exam_results er
+                JOIN courses c ON er.course_id = c.id
+                ORDER BY er.id DESC;             
+            """
+            cursor.execute(query)
+            rows = cursor.fetchall()
+            return jsonify(rows), 200
+        else:
+            query = """
+                SELECT 
+                    er.id,
+                    er.course_id,
+                    c.name,
+                    er.total_students_appeared,
+                    er.total_students_passed,
+                    er.general,
+                    er.sc,
+                    er.st,
+                    er.obc,
+                    er.ews,
+                    er.male,
+                    er.female,
+                    er.other,
+                    er.year
+                FROM exam_results er
+                JOIN courses c ON er.course_id = c.id
+                WHERE year = %s
+                ORDER BY id DESC
+            """
 
-        cursor.execute(query, (year,))
-        rows = cursor.fetchall()
+            cursor.execute(query, (year,))
+            rows = cursor.fetchall()
 
-        return jsonify(rows), 200
+            return jsonify(rows), 200
 
     except mysql.connector.Error as err:
         print(err)

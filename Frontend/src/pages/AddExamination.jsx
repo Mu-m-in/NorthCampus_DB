@@ -19,7 +19,6 @@ const AddExamination = () => {
     year: "",
   });
 
-  // Fetch course list
   useEffect(() => {
     const loadCourses = async () => {
       try {
@@ -50,50 +49,69 @@ const AddExamination = () => {
   };
 
   return (
-    <div className="p-8 max-w-3xl mx-auto">
-      <h1 className="text-2xl font-bold mb-6">
+    <div className="p-8 max-w-4xl mx-auto">
+      <h1 className="text-3xl font-bold mb-6 text-blue-700">
         Add Final Year Examination Record
       </h1>
 
       <form
         onSubmit={handleSubmit}
-        className="grid grid-cols-2 gap-4 bg-white shadow p-6 rounded-lg"
+        className="bg-white shadow-md p-6 rounded-xl grid grid-cols-1 md:grid-cols-2 gap-5"
       >
-        {/* PROGRAM DROPDOWN */}
-        <select
-          name="program"
-          value={form.program}
-          onChange={handleChange}
-          className="border p-2 rounded col-span-2"
-        >
-          <option value="">Select Program</option>
-          {courses.map((c) => (
-            <option key={c.id} value={c.id}>
-              {c.name}
-            </option>
-          ))}
-        </select>
+        {/* Program Dropdown */}
+        <div className="col-span-2">
+          <label className="font-semibold text-gray-700">Program</label>
+          <select
+            name="program"
+            value={form.program}
+            onChange={handleChange}
+            className="border p-2 rounded w-full mt-1"
+          >
+            <option value="">Select Program</option>
+            {courses.map((c) => (
+              <option key={c.id} value={c.id}>
+                {c.name}
+              </option>
+            ))}
+          </select>
+        </div>
 
-        {/* OTHER INPUT FIELDS */}
-        {Object.keys(form)
-          .filter((key) => key !== "program")
-          .map((key) => (
+        {/* Two-column balanced fields */}
+        {[
+          "total_students_appeared",
+          "total_students_passed",
+          "general",
+          "sc",
+          "st",
+          "obc",
+          "ews",
+          "male",
+          "female",
+          "other",
+          "year",
+        ].map((key) => (
+          <div className="flex flex-col" key={key}>
+            <label className="font-semibold text-gray-700">
+              {key.replace(/_/g, " ").toUpperCase()}
+            </label>
             <input
-              key={key}
               name={key}
-              value={form[key] || ""}
+              value={form[key]}
               onChange={handleChange}
-              placeholder={key.replace(/_/g, " ").toUpperCase()}
-              className="border p-2 rounded"
+              className="border p-2 rounded mt-1"
+              placeholder={`Enter ${key.replace(/_/g, " ")}`}
             />
-          ))}
+          </div>
+        ))}
 
-        <button
-          type="submit"
-          className="col-span-2 bg-blue-600 text-white py-2 rounded hover:bg-blue-700"
-        >
-          Save Record
-        </button>
+        <div className="col-span-2">
+          <button
+            type="submit"
+            className="bg-blue-600 text-white py-2 rounded-lg w-full hover:bg-blue-700 transition"
+          >
+            Save Record
+          </button>
+        </div>
       </form>
     </div>
   );
