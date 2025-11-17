@@ -64,7 +64,7 @@ const ViewStudents = () => {
   const updateStudent = async () => {
     try {
       await axios.put(
-        `http://127.0.0.1:5000/api/students/${editData.id}`,
+        `http://127.0.0.1:5000/api/students/`,
         editData
       );
       alert("Student updated successfully!");
@@ -77,29 +77,30 @@ const ViewStudents = () => {
 
   return (
     <div className="p-6 max-w-7xl mx-auto">
-      
+
+      {/* Page Title */}
       <h1 className="text-3xl font-bold mb-6 text-blue-700">
         View Students
       </h1>
 
       {/* Search Bar */}
-      <input
-        type="text"
-        placeholder="Search by name, department, or course..."
-        value={filterText}
-        onChange={(e) => setFilterText(e.target.value)}
-        className="border p-2 rounded mb-4 w-full md:w-1/3 shadow-sm"
-      />
+      <div className="bg-white p-4 rounded-lg shadow-md mb-6">
+        <input
+          type="text"
+          placeholder="Search by name, department, or course..."
+          value={filterText}
+          onChange={(e) => setFilterText(e.target.value)}
+          className="border p-3 rounded-lg w-full shadow-sm focus:ring-2 focus:ring-blue-500"
+        />
+      </div>
 
-      {/* FILTERS */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 bg-gray-100 p-4 rounded-lg shadow-sm mb-6">
+      {/* Filters */}
+      <div className="bg-white p-4 rounded-lg shadow-md grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
 
         <select
-          className="border p-2 rounded"
+          className="border p-2 rounded-lg shadow-sm"
           value={filters.gender}
-          onChange={(e) =>
-            setFilters({ ...filters, gender: e.target.value })
-          }
+          onChange={(e) => setFilters({ ...filters, gender: e.target.value })}
         >
           <option value="">Gender</option>
           <option>Male</option>
@@ -108,14 +109,12 @@ const ViewStudents = () => {
         </select>
 
         <select
-          className="border p-2 rounded"
+          className="border p-2 rounded-lg shadow-sm"
           value={filters.category}
-          onChange={(e) =>
-            setFilters({ ...filters, category: e.target.value })
-          }
+          onChange={(e) => setFilters({ ...filters, category: e.target.value })}
         >
           <option value="">Category</option>
-          <option>General</option>
+          <option>GEN</option>
           <option>OBC</option>
           <option>SC</option>
           <option>ST</option>
@@ -123,11 +122,9 @@ const ViewStudents = () => {
         </select>
 
         <select
-          className="border p-2 rounded"
+          className="border p-2 rounded-lg shadow-sm"
           value={filters.religion}
-          onChange={(e) =>
-            setFilters({ ...filters, religion: e.target.value })
-          }
+          onChange={(e) => setFilters({ ...filters, religion: e.target.value })}
         >
           <option value="">Religion</option>
           <option>Muslim</option>
@@ -138,7 +135,7 @@ const ViewStudents = () => {
         </select>
 
         <select
-          className="border p-2 rounded"
+          className="border p-2 rounded-lg shadow-sm"
           value={filters.handicapped}
           onChange={(e) =>
             setFilters({ ...filters, handicapped: e.target.value })
@@ -153,28 +150,26 @@ const ViewStudents = () => {
 
       {/* Summary Cards */}
       <h2 className="text-xl font-bold mb-2 text-gray-700">Summary</h2>
-
       <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-6">
-        <div className="bg-white p-4 rounded shadow font-semibold">Male: {totalMale}</div>
-        <div className="bg-white p-4 rounded shadow font-semibold">Female: {totalFemale}</div>
-        <div className="bg-white p-4 rounded shadow font-semibold">Other: {totalOther}</div>
-        <div className="bg-white p-4 rounded shadow font-semibold">Handicapped: {totalHandicapped}</div>
-        <div className="bg-white p-4 rounded shadow font-semibold">Total: {filtered.length}</div>
+        <div className="bg-white p-4 rounded-lg shadow-md font-semibold">Male: {totalMale}</div>
+        <div className="bg-white p-4 rounded-lg shadow-md font-semibold">Female: {totalFemale}</div>
+        <div className="bg-white p-4 rounded-lg shadow-md font-semibold">Other: {totalOther}</div>
+        <div className="bg-white p-4 rounded-lg shadow-md font-semibold">Handicapped: {totalHandicapped}</div>
+        <div className="bg-white p-4 rounded-lg shadow-md font-semibold">Total: {filtered.length}</div>
       </div>
 
-      {/* CATEGORY COUNTS */}
+      {/* Category Breakdown */}
       <h2 className="text-xl font-bold mb-2 text-gray-700">Category Breakdown</h2>
-
       <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-6">
-        <div className="bg-white p-4 rounded shadow font-semibold">General: {totalGeneral}</div>
-        <div className="bg-white p-4 rounded shadow font-semibold">OBC: {totalOBC}</div>
-        <div className="bg-white p-4 rounded shadow font-semibold">SC: {totalSC}</div>
-        <div className="bg-white p-4 rounded shadow font-semibold">ST: {totalST}</div>
-        <div className="bg-white p-4 rounded shadow font-semibold">EWS: {totalEWS}</div>
+        <div className="bg-white p-4 rounded-lg shadow-md font-semibold">GEN: {totalGeneral}</div>
+        <div className="bg-white p-4 rounded-lg shadow-md font-semibold">OBC: {totalOBC}</div>
+        <div className="bg-white p-4 rounded-lg shadow-md font-semibold">SC: {totalSC}</div>
+        <div className="bg-white p-4 rounded-lg shadow-md font-semibold">ST: {totalST}</div>
+        <div className="bg-white p-4 rounded-lg shadow-md font-semibold">EWS: {totalEWS}</div>
       </div>
 
       {/* Table */}
-      <div className="overflow-x-auto bg-white shadow rounded-xl">
+      <div className="overflow-x-auto bg-white shadow-md rounded-xl">
         <table className="min-w-full table-auto">
           <thead className="bg-blue-600 text-white">
             <tr>
@@ -205,7 +200,7 @@ const ViewStudents = () => {
                 <td className="p-2 text-center">{s.year_of_admission}</td>
                 <td className="p-2 text-center">
                   <button
-                    className="bg-green-600 text-white px-3 py-1 rounded-lg shadow"
+                    className="bg-blue-600 text-white px-3 py-1 rounded-lg shadow-md hover:bg-blue-700"
                     onClick={() => setEditData(s)}
                   >
                     Edit
@@ -220,19 +215,16 @@ const ViewStudents = () => {
 
       {/* EDIT MODAL */}
       {editData && (
-        <div className="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center">
+        <div className="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center z-50">
+          <div className="bg-white rounded-xl shadow-xl w-[420px] p-6">
 
-          <div className="bg-white rounded-xl shadow-2xl w-[420px] p-6 animate-fade-in">
-            <h2 className="text-xl font-bold text-blue-700 mb-4">
-              Edit Student
-            </h2>
+            <h2 className="text-xl font-bold text-blue-700 mb-4">Edit Student</h2>
 
-            {/* Form Fields */}
-            <div className="space-y-3">
+            <div className="space-y-4">
 
               <input
                 type="text"
-                className="border p-2 rounded w-full"
+                className="border p-2 rounded-lg w-full"
                 value={editData.name}
                 onChange={(e) =>
                   setEditData({ ...editData, name: e.target.value })
@@ -242,7 +234,7 @@ const ViewStudents = () => {
 
               <input
                 type="text"
-                className="border p-2 rounded w-full"
+                className="border p-2 rounded-lg w-full"
                 value={editData.roll_number}
                 onChange={(e) =>
                   setEditData({ ...editData, roll_number: e.target.value })
@@ -251,7 +243,7 @@ const ViewStudents = () => {
               />
 
               <select
-                className="border p-2 rounded w-full"
+                className="border p-2 rounded-lg w-full"
                 value={editData.gender}
                 onChange={(e) =>
                   setEditData({ ...editData, gender: e.target.value })
@@ -263,13 +255,13 @@ const ViewStudents = () => {
               </select>
 
               <select
-                className="border p-2 rounded w-full"
+                className="border p-2 rounded-lg w-full"
                 value={editData.category}
                 onChange={(e) =>
                   setEditData({ ...editData, category: e.target.value })
                 }
               >
-                <option>General</option>
+                <option>GEN</option>
                 <option>OBC</option>
                 <option>SC</option>
                 <option>ST</option>
@@ -277,7 +269,7 @@ const ViewStudents = () => {
               </select>
 
               <select
-                className="border p-2 rounded w-full"
+                className="border p-2 rounded-lg w-full"
                 value={editData.religion}
                 onChange={(e) =>
                   setEditData({ ...editData, religion: e.target.value })
@@ -291,7 +283,7 @@ const ViewStudents = () => {
               </select>
 
               <select
-                className="border p-2 rounded w-full"
+                className="border p-2 rounded-lg w-full"
                 value={editData.handicapped ? "true" : "false"}
                 onChange={(e) =>
                   setEditData({
@@ -306,17 +298,16 @@ const ViewStudents = () => {
 
             </div>
 
-            {/* Buttons */}
             <div className="flex gap-3 mt-6">
               <button
-                className="bg-blue-600 text-white p-2 w-full rounded-lg"
+                className="bg-blue-600 text-white p-2 w-full rounded-lg hover:bg-blue-700"
                 onClick={updateStudent}
               >
                 Save
               </button>
 
               <button
-                className="bg-gray-400 p-2 w-full rounded-lg"
+                className="bg-gray-400 p-2 w-full rounded-lg hover:bg-gray-500"
                 onClick={() => setEditData(null)}
               >
                 Close
@@ -324,7 +315,6 @@ const ViewStudents = () => {
             </div>
 
           </div>
-
         </div>
       )}
 

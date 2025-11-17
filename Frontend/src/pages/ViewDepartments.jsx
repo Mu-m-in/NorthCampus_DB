@@ -4,8 +4,14 @@ import axios from "axios";
 const ViewDepartments = () => {
   const [departments, setDepartments] = useState([]);
   const [courses, setCourses] = useState([]);
+
   const [deptFilter, setDeptFilter] = useState("");
   const [courseFilter, setCourseFilter] = useState("");
+
+  // Modal State
+  const [editModalOpen, setEditModalOpen] = useState(false);
+  const [editingType, setEditingType] = useState(""); // department | course
+  const [editData, setEditData] = useState({});
 
   // Fetch Data
   useEffect(() => {
@@ -34,6 +40,35 @@ const ViewDepartments = () => {
   const filteredCourses = courses.filter((c) =>
     c.name.toLowerCase().includes(courseFilter.toLowerCase())
   );
+
+  // Open Modal
+  const openEditModal = (data, type) => {
+    setEditData(data);
+    setEditingType(type);
+    setEditModalOpen(true);
+  };
+
+  // Save Edited Data
+  const handleSave = async () => {
+    try {
+      if (editingType === "department") {
+        await axios.put(
+          `http://127.0.0.1:5000/api/departments/`,
+          editData
+        );
+      } else {
+        await axios.put(
+          `http://127.0.0.1:5000/api/courses/`,
+          editData
+        );
+      }
+
+      window.location.reload();
+    } catch (err) {
+      console.error(err);
+      alert("Failed to update!");
+    }
+  };
 
   return (
     <div className="p-6 max-w-7xl mx-auto">
@@ -64,6 +99,7 @@ const ViewDepartments = () => {
               <tr>
                 <th className="p-3 text-left">ID</th>
                 <th className="p-3 text-left">Department Name</th>
+                <th className="p-3 text-center">Action</th>
               </tr>
             </thead>
             <tbody>
@@ -74,6 +110,14 @@ const ViewDepartments = () => {
                 >
                   <td className="p-3">{dept.id}</td>
                   <td className="p-3">{dept.name}</td>
+                  <td className="p-3 text-center">
+                    <button
+                      className="px-3 py-1 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+                      onClick={() => openEditModal(dept, "department")}
+                    >
+                      Edit
+                    </button>
+                  </td>
                 </tr>
               ))}
             </tbody>
@@ -110,6 +154,7 @@ const ViewDepartments = () => {
                 <th className="p-3 text-center">Duration</th>
                 <th className="p-3 text-center">Exam System</th>
                 <th className="p-3 text-center">Year Start</th>
+                <th className="p-3 text-center">Action</th>
               </tr>
             </thead>
 
@@ -133,7 +178,17 @@ const ViewDepartments = () => {
                     <td className="p-3 text-center">{course.st_seats}</td>
                     <td className="p-3 text-center">{course.duration_years}</td>
                     <td className="p-3 text-center">{course.exam_system}</td>
-                    <td className="p-3 text-center">{course.year_start ? course.year_start : "2003"}</td>
+                    <td className="p-3 text-center">
+                      {course.year_start ? course.year_start : "2003"}
+                    </td>
+                    <td className="p-3 text-center">
+                      <button
+                        className="px-3 py-1 bg-green-600 text-white rounded-lg hover:bg-green-700"
+                        onClick={() => openEditModal(course, "course")}
+                      >
+                        Edit
+                      </button>
+                    </td>
                   </tr>
                 );
               })}
@@ -141,6 +196,76 @@ const ViewDepartments = () => {
           </table>
         </div>
       </div>
+
+      {/* ===== EDIT MODAL ===== */}
+      {editModalOpen && (
+        <div className="fixed inset-0 backdrop-blur-sm flex items-center justify-center z-50">
+          <div className="bg-white p-6 rounded-xl w-full max-w-2xl shadow-lg">
+
+            <h2 className="text-xl font-semibold mb-4">
+              Edit {editingType === "department" ? "Department" : "Course"}
+            </h2>
+
+            {/* Department Simple Form */}
+            {editingType === "department" && (
+              <div>
+                <label className="block mb-1">Name</label>
+                <input
+                  type="text"
+                  value={editData.name}
+                  onChange={(e) =>
+                    setEditData({ ...editData, name: e.target.value })
+                  }
+                  className="w-full border p-2 rounded-lg"
+                />
+              </div>
+            )}
+
+            {/* Course Multi-Column Form */}
+            {editingType === "course" && (
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+
+                {Object.keys(editData).map((key) => (
+                  key !== "id" &&
+                  key !== "department_id" && (
+                    <div key={key}>
+                      <label className="block text-gray-700 text-sm capitalize mb-1">
+                        {key.replace("_", " ")}
+                      </label>
+                      <input
+                        type="text"
+                        value={editData[key]}
+                        onChange={(e) =>
+                          setEditData({ ...editData, [key]: e.target.value })
+                        }
+                        className="border p-2 rounded-lg w-full"
+                      />
+                    </div>
+                  )
+                ))}
+
+              </div>
+            )}
+
+            <div className="flex justify-end gap-3 mt-6">
+              <button
+                className="px-4 py-2 bg-gray-400 text-white rounded-lg"
+                onClick={() => setEditModalOpen(false)}
+              >
+                Cancel
+              </button>
+
+              <button
+                className="px-4 py-2 bg-blue-600 text-white rounded-lg"
+                onClick={handleSave}
+              >
+                Save
+              </button>
+            </div>
+
+          </div>
+        </div>
+      )}
 
     </div>
   );

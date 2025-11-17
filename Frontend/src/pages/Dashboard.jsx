@@ -35,21 +35,20 @@ export default function Dashboard() {
     );
 
   const cards = [
-    { title: "Departments", value: stats.departments, icon: Building2, link: "/departments" },
-    { title: "Students", value: stats.students, icon: Users, link: "/students" },
-    { title: "Exams", value: stats.exams, icon: BarChart3, link: "/examination" },
-    { title: "Placements", value: stats.placements, icon: GraduationCap, link: "/placement" },
-    { title: "Scholarships", value: stats.scholarships, icon: FileCheck, link: "/scholarship" },
-    { title: "Staff", value: stats.staff, icon: UserCog, link: "/staff" },
-    { title: "Hostel Blocks", value: stats.hostels, icon: School, link: "/hostel" },
-    { title: "Library Books", value: stats.library_books, icon: BookOpen, link: "/library" },
+    { title: "Departments", value: stats.departments, icon: Building2, link: "/departments/view" },
+    { title: "Students", value: stats.students, icon: Users, link: "/students/view" },
+    { title: "Total Students Graduated", value: stats.exams, icon: BarChart3, link: "/examination/view" },
+    { title: "Placements", value: stats.placements, icon: GraduationCap, link: "/placement/view" },
+    { title: "Scholarships", value: stats.scholarships, icon: FileCheck, link: "/scholarship/view" },
+    { title: "Staff", value: stats.staff, icon: UserCog, link: "/staff/view" },
+    { title: "Hostel Blocks", value: stats.hostels, icon: School, link: "/hostel/view" },
   ];
 
   const quickLinks = [
     { name: "Add Department", link: "/departments/add" },
     { name: "Add Student", link: "/students/add" },
     { name: "View Students", link: "/students/view" },
-    { name: "Generate Report", link: "/report" },
+    { name: "Results Report", link: "/examination/view" },
   ];
 
   return (

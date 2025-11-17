@@ -70,3 +70,36 @@ def add_student():
     finally:
         cursor.close()
         db.close()
+
+@students_bp.route('/', methods=['PUT'])
+def update_student():
+    data = request.get_json()
+
+    required_fields = ["id", "name", "roll_number", "category", "gender", "handicapped", "religion", "year_of_admission"]
+    missing = [field for field in required_fields if field not in data]
+    if missing:
+        return jsonify({"error": f"Missing fields: {', '.join(missing)}"}), 400
+
+    db = get_db()
+    cursor = db.cursor(dictionary=True)
+
+    try:
+        cursor.execute("""
+            UPDATE students
+            SET name = %s, roll_number = %s, category = %s, gender = %s, handicapped = %s, religion = %s, year_of_admission = %s
+            WHERE id = %s
+        """, (
+            data['name'], data['roll_number'],
+            data['category'], data['gender'], data['handicapped'], data['religion'], data['year_of_admission'], data['id']
+        ))
+        db.commit()
+        return jsonify({
+            "success": True,
+            "message": "Student updated successfully",
+            "student": data
+        }), 200
+    except mysql.connector.Error as err:
+        return jsonify({"error": str(err)}), 500
+    finally:
+        cursor.close()
+        db.close()

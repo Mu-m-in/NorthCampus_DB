@@ -61,9 +61,9 @@ def add_department():
 @department_bp.route('/', methods=['PUT'])
 def update_department():
     data = request.get_json()
-
+    print(data)
     # Validate required fields
-    required_fields = ['id', 'name']
+    required_fields = ['name']
     missing = [field for field in required_fields if field not in data]
     if missing:
         return jsonify({'error': f'Missing fields: {", ".join(missing)}'}), 400
