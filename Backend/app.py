@@ -8,6 +8,7 @@ from routes.placement_routes import placement_bp
 from routes.scholarship_routes import scholarship_bp
 from routes.hostels_routes import hostel_bp
 from routes.library_routes import library_bp
+from routes.examination_routes import examination_bp
 # from routes.student_routes import student_bp
 # ... import other blueprints
 
@@ -23,6 +24,7 @@ app.register_blueprint(placement_bp, url_prefix="/api/placements")
 app.register_blueprint(scholarship_bp, url_prefix="/api/scholarships")
 app.register_blueprint(hostel_bp, url_prefix="/api/hostels")
 app.register_blueprint(library_bp, url_prefix="/api/library")
+app.register_blueprint(examination_bp, url_prefix="/api/examinations")
 
 # app.register_blueprint(student_bp, url_prefix="/api/students")
 # ... register others similarly
