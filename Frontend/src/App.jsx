@@ -14,6 +14,10 @@ import AddHostel from "./pages/AddHostel";
 import ViewHostel from "./pages/ViewHostel";
 import AddScholarship from "./pages/AddScholarship";
 import ViewScholarships from "./pages/ViewScholarship";
+import AddExamination from "./pages/AddExamination";
+import ViewExamination from "./pages/ViewExamination";
+import AddEmployee from "./pages/AddEmployee";
+import ViewEmployee from "./pages/ViewEmployee";
 
 function App() {
   return (
@@ -34,6 +38,10 @@ function App() {
         <Route path="/hostel/view" element={<ViewHostel />} />
         <Route path="/scholarship/add" element={<AddScholarship />} />
         <Route path="/scholarship/view" element={<ViewScholarships />} />
+        <Route path="/examination/add" element={<AddExamination />} />
+        <Route path="/examination/view" element={<ViewExamination />} />
+        <Route path="/staff/add" element={<AddEmployee />} />
+        <Route path="/staff/view" element={<ViewEmployee />} />
       </Routes>
     </div>
     <Footer />

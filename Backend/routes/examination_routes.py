@@ -16,11 +16,11 @@ def get_db():
 @examination_bp.route("/", methods=["POST"])
 def add_final_year_student():
     data = request.get_json()
+    print(data)
 
     # REQUIRED FIELDS
-    required_fields = ["program, total_students_appeared , total_students_passed , general , sc , st , obc , ews , male, female, other, year "]
+    required_fields = ["program", "total_students_appeared" , "total_students_passed" , "general" , "sc" , "st" , "obc" , "ews" , "male", "female", "other", "year" ]
     missing = [field for field in required_fields if field not in data]
-
     if missing:
         return jsonify({"error": "Missing fields: " + ", ".join(missing)}), 400
 
@@ -29,22 +29,22 @@ def add_final_year_student():
 
     try:
         cursor.execute("""
-            INSERT INTO examinations
-            (program, total_students_appeared , total_students_passed , general , sc , st , obc , ews , male, female, other, year )
+            INSERT INTO exam_results
+            (course_id, total_students_appeared , total_students_passed , general , sc , st , obc , ews , male, female, other, year )
             VALUES (%s, %s, %s, %s, %s, %s , %s, %s, %s, %s ,%s ,%s)
         """, (
             data["program"],
+            data["total_students_appeared"],
+            data["total_students_passed"],
+            data["general"],
             data["sc"],
             data["st"],
             data["obc"],
             data["ews"],
-            data["general"],
             data["male"],
             data["female"],
             data["other"],
-            data["year"],
-            data["total_students_appeared"],
-            data["total_students_passed"]
+            data["year"]
         ))
 
         db.commit()
@@ -66,7 +66,6 @@ def add_final_year_student():
 @examination_bp.route("/report", methods=["GET"])
 def final_year_report():
     year = request.args.get("year")
-
     db = get_db()
     cursor = db.cursor(dictionary=True)
 
@@ -74,36 +73,30 @@ def final_year_report():
         query = """
             SELECT 
                 id,
-                program,
-                total_students_appeared ,
-                total_students_passed ,
-                general ,
-                sc ,
-                st ,
-                obc ,
-                ews ,
+                course_id,
+                total_students_appeared,
+                total_students_passed,
+                general,
+                sc,
+                st,
+                obc,
+                ews,
                 male,
                 female,
                 other,
                 year    
-            FROM examination
-            {where}
+            FROM exam_results
+            WHERE year = %s
             ORDER BY id DESC
         """
 
-        where = ""
-        params = ()
-
-        if year:
-            where = "WHERE year = %s"
-            params = (year,)
-
-        cursor.execute(query.format(where=where), params)
+        cursor.execute(query, (year,))
         rows = cursor.fetchall()
 
         return jsonify(rows), 200
 
     except mysql.connector.Error as err:
+        print(err)
         return jsonify({"error": str(err)}), 500
 
     finally:
